@@ -14,5 +14,9 @@ def plot_dis_density(series, **kwargs):
     pass
 
 def plot_hour(series, **kwargs):
-    plt.hist(series.index, series.values)
+    """
+    """
+    value_counts = series.value_counts(sort=False)
+    value_counts = value_counts.sort_index()
+    plt.plot(series.index, series.values)
     pass

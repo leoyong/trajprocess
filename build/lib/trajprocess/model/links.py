@@ -25,7 +25,7 @@ class TripLinks:
             series = (self.df['etime'] - self.df['stime']).astype("int64") // 10 ** 9
         else:
             series = self.df['duration']
-            
+
         plotLink.plot_time_density(series, *args, **kwargs)
         # plt.hist(series, range = (0, 3600), bins = int(3600 / 60), density = True)
 
@@ -40,6 +40,6 @@ class TripLinks:
             series_hour = self.df['stime'].dt.hour
         else:
             series_hour = self.df['hour']
-
+        
         plotLink.plot_hour(series_hour)
 

@@ -1,6 +1,3 @@
-
-
-
 import math
 import numpy as np
 # https://github.com/wandergis/coordTransform_py/blob/master/coordTransform_utils.py
