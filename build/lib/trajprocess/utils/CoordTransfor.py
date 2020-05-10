@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from .base import isnumbrer
 # https://github.com/wandergis/coordTransform_py/blob/master/coordTransform_utils.py
 
 x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -66,7 +67,7 @@ def outOfChina(lng, lat):
     
     return False
 
-def WGSToGC02_pt(lng, lat):
+def _WGSToGC02_pt(lng, lat):
     """
     lng:
     lat:
@@ -89,20 +90,23 @@ def WGSToGC02_pt(lng, lat):
     mgLng = lng + dLng
     return mgLng, mgLat
 
-def WGSToGC02(lng_vec, lat_vec):
+def WGSToGC02(lng, lat):
     """
     Transfer WGS84 to GCJ-02
     lng_vec: 
     """
+    if isnumbrer(lng) and isnumbrer(lat):
+        return _WGSToGC02_pt(lng, lat)
+    
     try:
         import numpy as np
     except:
         return "Error, unable to import Numpy"
 
-    dLat = transformLat(lng_vec - 105.0, lat_vec - 35.0)
-    dLng = transformLon(lng_vec - 105.0, lat_vec - 35.0)
+    dLat = transformLat(lng - 105.0, lat - 35.0)
+    dLng = transformLon(lng - 105.0, lat - 35.0)
 
-    radLat = lat_vec / 180.0 * pi
+    radLat = lat / 180.0 * pi
     magic = np.sin(radLat)
     magic = 1 - ee * magic * magic
     sqrtMagic = np.sqrt(magic)
@@ -110,11 +114,11 @@ def WGSToGC02(lng_vec, lat_vec):
     dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi)
     dLng = (dLng * 180.0) / (a / sqrtMagic * np.cos(radLat) * pi)
 
-    mgLat = lat_vec + dLat
-    mgLng = lng_vec + dLng
+    mgLat = lat + dLat
+    mgLng = lng + dLng
     return mgLng, mgLat
 
-def GC02ToWGS_pt(lng, lat):
+def _GC02ToWGS_pt(lng, lat):
     """
     GCJ02 to WGS84
     lng: GCJ02 lontitude
@@ -135,25 +139,28 @@ def GC02ToWGS_pt(lng, lat):
     mglng = lng + dlng
     return lng * 2 - mglng, lat * 2 - mglat
 
-def GC02ToWGS(lng_vec, lat_vec):
+def GC02ToWGS(lng, lat):
     """
     GCJ02 to WGS84
     lng_vec: longitude vector
     lat_vec: latitude vector
     """
+    if isnumbrer(lng) and isnumbrer(lat):
+        return _GC02ToWGS_pt(lng, lat)
+
     try:
         import numpy as np
     except:
         return "Error, unable to import Numpy"
     
-    dlat = transformLat(lng_vec - 105.0, lat_vec - 35.0)
-    dlng = transformLon(lng_vec - 105.0, lat_vec - 35.0)
-    radlat = lat_vec / 180.0 * pi
+    dlat = transformLat(lng - 105.0, lat - 35.0)
+    dlng = transformLon(lng - 105.0, lat - 35.0)
+    radlat = lat / 180.0 * pi
     magic = np.sin(radlat)
     magic = 1 - ee * magic * magic
     sqrtMagic = np.sqrt(magic)
     dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi)
     dlng = (dlng * 180.0) / (a / sqrtMagic * np.cos(radlat) * np.pi)
-    mglat = lat_vec + dlat
-    mglng = lng_vec + dlng
-    return lng_vec * 2 - mglng, lat_vec * 2 - mglat
+    mglat = lat + dlat
+    mglng = lng + dlng
+    return lng * 2 - mglng, lat * 2 - mglat

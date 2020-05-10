@@ -1,5 +1,6 @@
 from math import radians, cos, sin, asin, sqrt
 from enum import Enum
+from .base import isnumbrer
 
 # mean earth radius - https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
 _AVG_EARTH_RADIUS_KM = 6371.0088
@@ -32,7 +33,7 @@ def get_avg_earth_radius(unit):
     return _AVG_EARTH_RADIUS_KM * _CONVERSIONS[unit]
 
 
-def haversine_pt(slng, slat, elng, elat, unit = Unit.KILOMETERS):
+def _haversine_pt(slng, slat, elng, elat, unit = Unit.KILOMETERS):
     """
     Default: km
     Code refer https://github.com/mapado/haversine/blob/master/haversine/haversine.py
@@ -54,6 +55,9 @@ def haversine(slng, slat, elng, elat, unit=Unit.KILOMETERS):
     elat: list-like variable
     Reference: https://github.com/mapado/haversine/blob/master/haversine/haversine.py
     """
+    if isnumbrer(slng) and isnumbrer(slat) and isnumbrer(elng) and isnumbrer(elat):
+        return _haversine_pt(slng, slat, elng, elat, unit= unit)
+    
     try:
         import numpy as np
     except ModuleNotFoundError:

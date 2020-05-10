@@ -12,5 +12,6 @@ trajprocess/utils/CoordTransfor.py
 trajprocess/utils/Distance.py
 trajprocess/utils/Grid.py
 trajprocess/utils/__init__.py
+trajprocess/utils/base.py
 trajprocess/visualization/__init__.py
 trajprocess/visualization/plotLink.py
