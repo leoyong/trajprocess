@@ -71,4 +71,4 @@ def haversine(slng, slat, elng, elat, unit=Unit.KILOMETERS):
     lat = elat - slat
     d = (np.sin(lat * 0.5) ** 2 + np.cos(slat) * np.cos(elat) * np.sin(lng * 0.5) ** 2)
 
-    return 2 * get_avg_earth_radius(unit) * np.arcsin(np.sqrt(d))
+    return 2 * get_avg_earth_radius(unit) * np.arcsin(d ** 0.5)
