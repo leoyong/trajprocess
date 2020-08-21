@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from .base import isnumbrer
+from .Distance import haversine
 # https://github.com/wandergis/coordTransform_py/blob/master/coordTransform_utils.py
 
 x_pi = 3.14159265358979324 * 3000.0 / 180.0
@@ -164,3 +165,28 @@ def GC02ToWGS(lng, lat):
     mglat = lat + dlat
     mglng = lng + dlng
     return lng * 2 - mglng, lat * 2 - mglat
+
+
+##############################################################
+# meter threshold to degree threshold
+##############################################################
+def threshold_meter_to_degree(lng, lat, thre = 1000):
+    """
+    """  
+    l, u = 0, 360
+    while True:
+        dis = haversine(lng, lat, lng, lat +  (l + u) / 2) * 1000
+        if dis > thre:
+            u = (u + l) / 2
+        if dis < thre:
+            l = (u + l) / 2
+        if (dis == thre) or (u - l < 0.000000001):
+            break
+    return (l + u) / 2
+
+def calculate_degree_threshold(lng, lat, xstep = 1000, ystep = 1000):
+    """
+    """
+    lng_thre = threshold_meter_to_degree(lng, lat, xstep)
+    lat_thre = threshold_meter_to_degree(lng, lat, ystep)
+    return lng_thre, lat_thre
